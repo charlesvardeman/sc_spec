@@ -36,10 +36,10 @@ Features:
 
 
 ## RDF
-The Resource Description Framework (RDF) is a framework for representing and linking data within the World Wide Web infrastructure [[RDF1.1](http://www.w3.org/TR/rdf11-concepts/)], and is a graph-based data model, where the core structure of the abstract syntax is a set of triples, each consisting of a subject, a predicate and an object.
+The Resource Description Framework (RDF) is a framework for representing and linking data within the World Wide Web infrastructure [[RDF1.1](http://www.w3.org/TR/rdf11-concepts/)], and is a graph-based data model, where the core structure of the abstract syntax is a set of triples, each consisting of a subject, a predicate and an object. The idea is that we want relationship identifiers that form a "Knowledge Graph" and represent [things not strings](https://googleblog.blogspot.com/2012/05/introducing-knowledge-graph-things-not.html).
 ![](https://github.com/charlesvardeman/sc_spec/blob/master/assets/rdf-graph.svg)
 
-Solid uses several serialization syntaxes for storing and exchanging RDF such as [Turtle](http://www.w3.org/TR/turtle/) and [JSON-LD](http://www.w3.org/TR/json-ld/). When creating new RDF resources, the preferred **default** serialization is Turtle. Solid-compliant servers should implement content negotiation in order to handle different serialization formats.
+There are several serialization syntaxes for storing and exchanging RDF such as [Turtle](http://www.w3.org/TR/turtle/) and [JSON-LD](http://www.w3.org/TR/json-ld/). When creating new RDF resources, the preferred **default** serialization is Turtle. Solid-compliant servers should implement content negotiation in order to handle different serialization formats.
 
 
 ## Linked Data Principles
