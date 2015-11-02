@@ -10,13 +10,11 @@
  4. [Ontologies](#Ontologies)
  4. [Reading and writing data using LDP](#reading-and-writing-data-using-ldp)
  5. [Reading and writing data using SPARQL](#reading-and-writing-data-using-sparql)
- 6. [CORS](#cors---cross-origin-resource-sharing)
- 7. [Live updates](#live-updates)
  8. [Identity management](#identity-management-based-on-webid)
  9. [Personal data workspaces](#personal-data-workspaces)
  10. [Authentication](#authentication)
  11. [Access control](#access-control)
- 12. [Software implementing SmartContainers](#software-implementing-solid)
+ 12 [Software implementing SmartContainers](#software-implementing-solid)
 
 Specification for Smart Containers
 
@@ -39,12 +37,13 @@ Features:
 
 ## RDF
 The Resource Description Framework (RDF) is a framework for representing and linking data within the World Wide Web infrastructure [[RDF1.1](http://www.w3.org/TR/rdf11-concepts/)], and is a graph-based data model, where the core structure of the abstract syntax is a set of triples, each consisting of a subject, a predicate and an object.
+![](https://github.com/charlesvardeman/sc_spec/blob/master/assets/rdf-graph.svg)
 
 Solid uses several serialization syntaxes for storing and exchanging RDF such as [Turtle](http://www.w3.org/TR/turtle/) and [JSON-LD](http://www.w3.org/TR/json-ld/). When creating new RDF resources, the preferred **default** serialization is Turtle. Solid-compliant servers should implement content negotiation in order to handle different serialization formats.
 
 
 ## Linked Data Principles
-
+Tim Berners-Lee published a [technical note](http://www.w3.org/DesignIssues/LinkedData.html) outlining some basic principles for publishing data on the Web.
 ## Ontologies
 
 ## Persistent Identifiers and minting URIs
