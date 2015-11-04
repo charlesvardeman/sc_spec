@@ -149,6 +149,7 @@ To facilitate the capturing of *concepts* within RDF data, the W3C has created a
 ### W3C Provenance Vocabulary
 The W3C has created a specification for the exchange of provenance data on the World Wide Web. It has also created an [implementation](http://www.w3.org/TR/2012/CR-prov-o-20121211/) of this specification using OWL 2. From the [Prov Primer](http://www.w3.org/TR/prov-primer/):
 > "The provenance of digital objects represents their origins. PROV is a specification to express provenance records, which contain descriptions of the entities and activities involved in producing and delivering or otherwise influencing a given object. Provenance can be used for many purposes, such as understanding how data was collected so it can be meaningfully used, determining ownership and rights over an object, making judgements about information to determine whether to trust it, verifying that the process and steps used to obtain a result complies with given requirements, and reproducing how something was generated."
+
 #### Prov snippit in JSON-LD
 An example of Prov in a JSON-LD serialization from the [Kleio](https://github.com/tetherless-world/kleio/tree/master/examples/jsonld-example) github repository. Kleio provides a python implementation of Prov using [Rdflib](https://github.com/RDFLib/rdflib).
 ```json
