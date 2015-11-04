@@ -142,6 +142,136 @@ Tim Berners-Lee published a [technical note](http://www.w3.org/DesignIssues/Link
 
 Data that adopts some of these principles is referred to as *"Five Star"* linked data. The [W3C](http://www.w3.org/standards/semanticweb/data) continues to create [recommendations](http://www.w3.org/standards/techs/linkeddata#w3c_all) to facilitate the linked data vision. The [BBC](http://www.bbc.co.uk/blogs/radiolabs/s5/linked-data/s5.html) has a nice introduction to linked data principles.
 ## Ontologies
+To facilitate the capturing of *concepts* within RDF data, the W3C has created a specification called the Web Ontology Language (OWL). OWL is on it's second revision and a [primer](http://www.w3.org/TR/owl2-primer/) for OWL 2 is available as a W3C technical report. From this technical report:
+> "The W3C OWL 2 Web Ontology Language (OWL) is a Semantic Web language designed to represent rich and complex knowledge about things, groups of things, and relations between things. OWL is a computational logic-based language such that knowledge expressed in OWL can be reasoned with by computer programs either to verify the consistency of that knowledge or to make implicit knowledge explicit. OWL documents, known as ontologies, can be published in the World Wide Web and may refer to or be referred from other OWL ontologies. OWL is part of the W3C's [Semantic Web](http://www.w3.org/2001/sw/) technology stack, which includes RDF [[RDF Concepts]](http://www.w3.org/TR/owl2-primer/#ref-rdf-concepts) and SPARQL [[SPARQL]](http://www.w3.org/TR/owl2-primer/#ref-sparql)."
+
+## Existing Ontologies Leveraged for Smart Containers.
+### W3C Provenance Vocabulary
+The W3C has created a specification for the exchange of provenance data on the World Wide Web. It has also created an [implementation](http://www.w3.org/TR/2012/CR-prov-o-20121211/) of this specification using OWL 2. From the [Prov Primer](http://www.w3.org/TR/prov-primer/):
+> "The provenance of digital objects represents their origins. PROV is a specification to express provenance records, which contain descriptions of the entities and activities involved in producing and delivering or otherwise influencing a given object. Provenance can be used for many purposes, such as understanding how data was collected so it can be meaningfully used, determining ownership and rights over an object, making judgements about information to determine whether to trust it, verifying that the process and steps used to obtain a result complies with given requirements, and reproducing how something was generated."
+#### Prov snippit in JSON-LD
+An example of Prov in a JSON-LD serialization from the [Kleio](https://github.com/tetherless-world/kleio/tree/master/examples/jsonld-example) github repository. Kleio provides a python implementation of Prov using [Rdflib](https://github.com/RDFLib/rdflib).
+```json
+{
+  "@context": {
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "test": "http://tw.rpi.edu/ns/test#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@graph": [
+        {
+          "@id": "test:bob",
+          "@type": "prov:Person",
+          "foaf:name": "Bob",
+          "prov:influenced": [
+            {
+              "@id": "test:entity"
+            },
+            {
+              "@id": "test:activity"
+            }
+          ]
+        },
+        {
+          "@id": "test:entity",
+          "@type": "prov:Entity",
+          "prov:wasAttributedTo": {
+            "@id": "test:bob"
+          },
+          "prov:wasGeneratedBy": {
+            "@id": "test:activity"
+          },
+          "prov:wasInfluencedBy": [
+            {
+              "@id": "test:bob"
+            },
+            {
+              "@id": "test:activity"
+            }
+          ],
+          "rdfs:label": "example entity"
+        },
+        {
+          "@id": "test:activity",
+          "@type": "prov:Activity",
+          "prov:generated": {
+            "@id": "test:entity"
+          },
+          "prov:influenced": {
+            "@id": "test:entity"
+          },
+          "prov:wasAssociatedWith": {
+            "@id": "test:bob"
+          },
+          "prov:wasInfluencedBy": {
+            "@id": "test:bob"
+          },
+          "rdfs:label": "example activity"
+        }
+      ]
+    },
+    {
+      "@graph": [
+        {
+          "@id": "test:derived_entity",
+          "@type": "prov:Entity",
+          "prov:wasDerivedFrom": {
+            "@id": "test:entity"
+          },
+          "prov:wasInfluencedBy": {
+            "@id": "test:entity"
+          },
+          "rdfs:label": "derived example entity"
+        },
+        {
+          "@id": "test:entity",
+          "@type": "prov:Entity",
+          "prov:influenced": {
+            "@id": "test:derived_entity"
+          }
+        }
+      ],
+      "@id": "urn:x-rdflib:default"
+    }
+  ]
+}
+```
+### W3C Health Care and Life Sciences Working Group
+The W3C Health Care and Life Sciences have released a [technical note](http://www.w3.org/2001/sw/hcls/notes/hcls-rdf-guide/) on best practices for publishing data as **Linked Data** on the World Wide Web. As part of this groups activities, a series of [recommended](http://www.w3.org/TR/2015/NOTE-hcls-dataset-20150514/) vocabularies for publication of datasets has been established. The vocabularies chosen are a well known set including the previously specified prov vocabulary. The dataset note contains a minimum specification of "**MUSTS**" for a dataset publication to be compliant. Smart Containers should enable the publication of datasets and software within the minimum specification for the vocabulary.
+
+### Open Archives Initiative Object Reuse and Exchange (OAI-ORE)
+The [OAI-ORE](https://www.openarchives.org/ore/1.0/primer) defines standards for the description and exchange of aggregations of "web resources" for use in archives and repositories. The Open Archives Initiative (OAI) has released a primer on the use of [JSON-LD](https://www.openarchives.org/ore/0.9/jsonld) for the description of these aggregations of web resources. It should be noted, there is significant overlap between the vocabularies specified by the Health Care and Life Sciences group and the OAI group with ORE only differing by the **Addition** of the ORE (http://www.openarchives.org/ore/terms/) and Fabio (http://purl.org/spar/fabio/) namespaces. A JSON-LD ORE example follows:
+
+```JSON
+{ "@context": "https://w3id.org/ore/context",
+  "@type": "ResourceMap",
+  "describes": {
+      "@id": "http://example.com/aggregation-1",
+      "@type": "Aggregation",
+      
+      "aggregates": [
+          "http://example.com/document-1",
+          { "@id": "http://other.example.org/data-2",
+            "@type": "AggregatedResource"
+          }
+      ]
+      
+  }
+}
+```
+
+### Ontology Design Patterns created for Smart Containers
+ 
 
 ## Persistent Identifiers and minting URIs
 CoolURIs, Trusty URI's WebID ORCID and RDA PID group work.
+
+## Other Relevant Technologies (Linked Data Fragments and Linked Data Platform).
+
+
+## Libraries and Frameworks for RDF and Semantic Web Development.
