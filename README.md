@@ -272,7 +272,7 @@ Existing work exists that describe generic scientific workflow processes that ca
 ### Notes
 1) We should follow the ["Five Stars of Linked Data Vocabulary Use"](http://www.semantic-web-journal.net/content/five-stars-linked-data-vocabulary-use) principles.
 2) Ontologies should be published as persistent JSON-LD contexts to facilitate extension. 
-3) Smart Containers only *Populates* core components of the vocabularies. Most Alignment should happen at the context level.
+3) Smart Containers only *Populate* core components of the vocabularies. Most Alignment should happen at the context level.
 4) An ontology pattern based approach is will facilitate reuse and interoperability.
 5) Links need to be **Dereferencable" to facilitate HATEOS, RESTFul and contextualiztion of resources. The ["Follow your nose principle"](http://patterns.dataincubator.org/book/follow-your-nose.html) is important.
 
