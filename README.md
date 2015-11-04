@@ -265,6 +265,16 @@ The [OAI-ORE](https://www.openarchives.org/ore/1.0/primer) defines standards for
   }
 }
 ```
+### General Workflow descriptions
+Existing work exists that describe generic scientific workflow processes that can be leveraged for Smart Containers such as the [wfdesc](http://www.sciencedirect.com/science/article/pii/S1570826815000049) vocabulary that uses Prov as a foundational ontology to facilitate interoperability.
+
+
+### Notes
+1) We should follow the ["Five Stars of Linked Data Vocabulary Use"](http://www.semantic-web-journal.net/content/five-stars-linked-data-vocabulary-use) principles.
+2) Ontologies should be published as persistent JSON-LD contexts to facilitate extension. 
+3) Smart Containers only *Populates* core components of the vocabularies. Most Alignment should happen at the context level.
+4) An ontology pattern based approach is will facilitate reuse and interoperability.
+5) Links need to be **Dereferencable" to facilitate HATEOS, RESTFul and contextualiztion of resources. The ["Follow your nose principle"](http://patterns.dataincubator.org/book/follow-your-nose.html) is important.
 
 ### Ontology Design Patterns created for Smart Containers
  
