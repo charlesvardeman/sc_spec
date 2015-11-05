@@ -281,7 +281,6 @@ Work exists that describe generic scientific workflow processes that can be leve
  
 
 ## Persistent Identifiers and minting URIs
-CoolURIs, Trusty URI's WebID ORCID and RDA PID group work.
 
 ### Cool URIs for the Semantic Web
 RDF uses URIs to describe both web resources (documents) and concepts that represent real wold things. From the [interest group note](http://www.w3.org/TR/cooluris/)
@@ -317,11 +316,83 @@ An example of a TrustyURI `http://example.org/np1#RAHGB0WzgQijR88g_rIwtPCmzYgyO4
 
 This uses the same concept as a trustyURI, but identifies the correct "resolver" of a given checksum.
 
-There should be a translation feature to identify resources that are **resolvable** once the container is **running** and has a IP address and web services. Resources used in creating a docker image (github software, mounted remote file systems, etc) that are web resolvable should be identified by that URI not the `urn:docker` schema. 
+There should be a translation feature to identify resources that are **resolvable** once the container is **running** and has a IP address and web services. Resources used in creating a docker image (github software, mounted remote file systems, etc) that are web resolvable should be identified by that URI not the `urn:docker` schema following "cool" URI or Trusty URI principles. 
 
 
 
 ### Ontology Namespace. 
+Previous best practices for naming of namespaces in ontologies was to use a Persistent URL or [PURL](https://purl.oclc.org/docs/index.html) identifier. The rational for this was to create a persistent namespace for reasoners and other processors of RDF data but enable the "follow your nose" principle and create a dereferenceable resource that could be redirected if the web location of the resource changed. While PURL namespaces are currently being maintained and will be for the foreseeable future, no new PURL namespaces may be created. The W3C Permanent Identifier Community Group has created a [URL redirection service](https://w3id.org/) that operates like a "switchboard", connecting requests for information with the true location of information on the Web. Namespaces used by ontologies created by Smart Containers should be w3id.org namespaces to facilitate future interoperability. Because Smart Containers is a preservation mechanism, the ability to have stable namespaces that can be changed without changing each document that uses the implemented ontology. 
+
+### Identifiers for Researchers.
+Smart Containers uses [ORCID](http://orcid.org/) as a unique identifier for researchers. ORCID:
+>"ORCID provides a persistent digital identifier that distinguishes you from every other researcher and, through integration in key research workflows such as manuscript and grant submission, supports automated linkages between you and your professional activities ensuring that your work is recognized."
+
+ORCID also follows Linked Data Principles since the resource identifier for a research is dereferenceable as linked data. For example the ORCID the identifies the researcher "Charles F. Vardeman II" is 0000-0003-4091-6059. As a URI on the semantic web it is: <http://orcid.org/0000-0003-4091-6059/>. If the URI is defreferenced:
+
+```bash
+curl --header "Accept: text/turtle" -L http://orcid.org/0000-0003-4091-6059
+```
+
+The following response is returned:
+```turtle
+@prefix pav:     <http://purl.org/pav/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix gn:      <http://www.geonames.org/ontology#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+
+<http://sws.geonames.org/6252001/>
+      a       rdfs:Resource , <http://schema.org/Place> , gn:Feature , <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+      rdfs:label "United States" ;
+      gn:countryCode "US" ;
+      gn:name "United States" .
+
+<http://orcid.org/0000-0003-4091-6059/>
+      a       foaf:PersonalProfileDocument , foaf:OnlineAccount ;
+      rdfs:label "0000-0003-4091-6059" ;
+      pav:createdOn "2014-07-15T18:05:52.395Z"^^xsd:dateTime ;
+      pav:createdWith
+              [ a       prov:Agent
+              ] ;
+      pav:lastUpdateOn "2015-09-03T12:05:25.669Z"^^xsd:dateTime ;
+      prov:generatedAtTime
+              "2015-09-03T12:05:25.669Z"^^xsd:dateTime ;
+      foaf:accountName "0000-0003-4091-6059" ;
+      foaf:accountServiceHomepage
+              <http://orcid.org> ;
+      foaf:maker <http://orcid.org/0000-0003-4091-6059> ;
+      foaf:primaryTopic <http://orcid.org/0000-0003-4091-6059> .
+
+<http://orcid.org/0000-0003-4091-6059>
+      a       foaf:Person , prov:Person ;
+      rdfs:label "Charles Vardeman II" ;
+      foaf:account <http://orcid.org/0000-0003-4091-6059/> ;
+      foaf:based_near
+              [ a       gn:Feature ;
+                gn:countryCode "US" ;
+                gn:parentCountry <http://sws.geonames.org/6252001/>
+              ] ;
+      foaf:familyName "Vardeman II" ;
+      foaf:givenName "Charles" ;
+      foaf:publications <http://orcid.org/0000-0003-4091-6059/> .
+```
+
+Note that both the *Provenance* of the resource <http://orcid.org/0000-0003-4091-6059/> and of the researcher <http://orcid.org/0000-0003-4091-6059> is specified.
+
+### DOI Persistent Identifiers
+The [Digital Object Identifier system](https://www.doi.org/) is a non-for-profit organization that provides Digital Object Identifier services and registration. However, even though the DOI resolver returns *web accessable* information, it *does not* return the resource itself, just a representation of the resource. From the [DOI Handbook](https://www.doi.org/doi_handbook/TOC.html):
+
+> "In the case of the DOI® System, using the Handle System® as a reference implementation, the resolution is from a DOI name, e.g., 10.1000/140, to one or more (hence "multiple") pieces of typed data: e.g. URLs representing instances of (manifestations of) the object, or services such as email, or one or more items of metadata. New types can be added at any time, making the DOI resolution system extremely flexible and responsive to new requirements. Resolution can be considered as a mechanism for maintaining a relationship between two data entities; an item of metadata is a relationship that someone claims exists between two entities: therefore, such metadata relationships between entities may be articulated and automated by resolution."
+
+Smart Containers will use DOIs as references to published data artifacts as [linked data](http://inkdroid.org/2011/04/25/dois-as-linked-data/) using DOI to construct a resolvable URL. For example, a DOI of the form doi:10.1038/171737a0 would have a URI  <http://dx.doi.org/10.1038/171737a0>. Since DOIs must be assigned through some authority, Smart Containers uses DOIs as annotations during the "publication" process when a container is linked to a physical publication. The organization [crossref.org]() is providing [content negotiation for DOIs](http://crosstech.crossref.org/2011/04/content_negotiation_for_crossr.html), however none of the examples appear to be dereferenceable. The Nature Publishing group is also providing access for their DOIs as linked data and have published their [core data model](http://www.nature.com/ontologies/) as linked data.
+
+
+### RDA Persistent Identifiers Group
+ 
+
 
 ## Other Relevant Technologies (Linked Data Fragments and Linked Data Platform).
 
