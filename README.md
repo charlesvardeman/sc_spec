@@ -266,6 +266,50 @@ The [OAI-ORE](https://www.openarchives.org/ore/1.0/primer) defines standards for
   }
 }
 ```
+
+### Hydra Core Vocabulary
+Operations involving RESTful web endpoints and APIs should be described using the [Hydra Core Vocabulary](https://www.hydra-cg.com/spec/latest/core/). 
+> "The exemplary Web API has to expose representations of issues and comments. To enable interaction with those resources, a client has to know which operations the server supports. In human-facing websites such affordances are typically exposed by links and forms and described in natural language. Unfortunately, machines can not interpret such information easily. The solution that presents itself is to reduce the language to a small number of unambiguous concepts which are easily recognizable by a machine client. Hydra formalizes such concepts."
+
+```JSON
+{
+  "@context": {"@vocab": "http://www.w3.org/ns/hydra/core#"},
+  "@id": "/hydra/api-demo/vocab",
+  "@type": "ApiDocumentation",
+      "@id": "http://www.markus-lanthaler.com/hydra/api-demo/vocab#User",
+      "@type": "Class",
+      "http://www.w3.org/2000/01/rdf-schema#comment": "A User represents a person registered in the system.",
+      "http://www.w3.org/2000/01/rdf-schema#label": "User",
+      "supportedOperation": [
+        {
+          "@type": "Operation",
+          "http://www.w3.org/2000/01/rdf-schema#label": "Replaces an existing User entity",
+          "expects": {"@id": "http://www.markus-lanthaler.com/hydra/api-demo/vocab#User"},
+          "method": "PUT",
+          "returns": {"@id": "http://www.markus-lanthaler.com/hydra/api-demo/vocab#User"},
+          "statusCodes": {
+            "http://www.w3.org/2000/01/rdf-schema#comment": "If the User entity wasn't found.",
+            "statusCode": 404
+          }
+        },
+        {
+          "@type": "Operation",
+          "http://www.w3.org/2000/01/rdf-schema#label": "Deletes a User entity",
+          "method": "DELETE",
+          "returns": {"@id": "http://www.w3.org/2002/07/owl#Nothing"},
+          "statusCodes": []
+        },
+        {
+          "@type": "Operation",
+          "http://www.w3.org/2000/01/rdf-schema#label": "Retrieves a User entity",
+          "method": "GET",
+          "returns": {"@id": "http://www.markus-lanthaler.com/hydra/api-demo/vocab#User"},
+          "statusCodes": []
+        }
+      ],
+```
+
+
 ### General Workflow descriptions
 Work exists that describe generic scientific workflow processes that can be leveraged for Smart Containers such as the [wfdesc](http://www.sciencedirect.com/science/article/pii/S1570826815000049) vocabulary that uses Prov as a foundational ontology to facilitate interoperability.
 
@@ -403,5 +447,13 @@ Smart Containers follows these guidelines and principles by associating PIDs wit
 
 
 ## Libraries and Frameworks for RDF and Semantic Web Development.
+
+## Software structure
+* Modular vocabularies that can be extended and built out,
+* Modular "populator" for vocabularies that attaches URIs or Literals to metadata.
+* Processing of Docker Commands and Docker file workflows.
+ - Dockerfile should be mapped to vocabulary description of operations.
+* Storage of persistent data in local configuration file.
+* Ability to *Query* metadata and return links to resources *within* container file systems.
 
 ## Testing and Validation of Smart Containers
