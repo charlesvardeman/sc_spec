@@ -279,6 +279,8 @@ Work exists that describe generic scientific workflow processes that can be leve
 
 ### Ontology Design Patterns created for Smart Containers
  
+### Research Data Alliance Terminology
+Ontologies created for Smart Containers should contain references (rdfs:seeAlso) to identifiers for Terminology created as part of Research Data Alliance efforts. For instance, the definition of Data Object vs Digital Object has been [discussed](https://rd-alliance.org/group/data-foundation-and-terminology-wg/post/community-discussion-definition-digital-object.html) extensively as part of the Data Foundations and Terminology group efforts would have a reference to the [definition](http://smw-rda.esc.rzg.mpg.de/index.php/Data_Object).
 
 ## Persistent Identifiers and minting URIs
 
@@ -391,10 +393,15 @@ Smart Containers will use DOIs as references to published data artifacts as [lin
 
 
 ### RDA Persistent Identifiers Group
- 
+The [Research Data Alliance](https://rd-alliance.org/) PID Information Types (PIT) WG [Recommendations](https://rd-alliance.org/group/pid-information-types-wg/outcomes/pid-information-types) have outlined some best practices with respect to Persistent Identifiers such as URIs and DOIs. From the group [charter]():
+> "In complex data domains, unique and persistent identifiers (PIDs) associated with specific information are the core of proper data management and access. They can be used to give every data object (including collection objects) an identity that enables referring to the data resources and metadata and, additionally, to prove integrity, authenticity and other attributes. But this requires a PID to be uniquely associated with specific types of information, and those types and their association with PIDs must be well managed. Therefore it is useful to specify a framework for information types, to start agreeing on some essential types, and to define a process by which other types can be integrated. The framework provides generic facilities only, which can and must be employed by specific communities to support their needs. The focus of the working group therefore is on cross-community concerns."
+
+Smart Containers follows these guidelines and principles by associating PIDs with specific "Types" of information. For instance ORDID persistent identifiers are to be used for identification of researchers, not of digital artifacts. As such a ORCID ID is a Prov:Person and through rdfs:domain and rdfs:range restrictions part of the prov ontology, this restriction can be enforced. This should be **Tested** though the framework testing mechanisms to indicate inconsistent use of identifiers.
 
 
 ## Other Relevant Technologies (Linked Data Fragments and Linked Data Platform).
 
 
 ## Libraries and Frameworks for RDF and Semantic Web Development.
+
+## Testing and Validation of Smart Containers
