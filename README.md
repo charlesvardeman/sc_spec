@@ -5,16 +5,11 @@
 ## Table of contents
 
  1. [Quick intro](#quick-intro)
- 2. [Brief example of Smart Containers in action](#brief-example-of-solid-in-action)
- 3. [RDF](#rdf)
- 4. [Ontologies](#Ontologies)
- 4. [Reading and writing data using LDP](#reading-and-writing-data-using-ldp)
- 5. [Reading and writing data using SPARQL](#reading-and-writing-data-using-sparql)
- 8. [Identity management](#identity-management-based-on-webid)
- 9. [Personal data workspaces](#personal-data-workspaces)
- 10. [Authentication](#authentication)
- 11. [Access control](#access-control)
- 12. [Software implementing SmartContainers](#software-implementing-solid)
+ 2. [Brief example of Smart Containers in action](#brief-example-of-smart-containers-in-action)
+ 3. [Docker](#docker)
+ 4. [RDF](#rdf)
+ 5. [Ontologies](#ontologies)
+ 6. [Persistent Identifiers and minting URIs](#persistent-identifiers-and-minting-uris)
 
 Specification for Smart Containers
 
@@ -28,7 +23,7 @@ By starting with a formal model of Docker and the provenance of Docker activitie
 Features:
 
 
-## Brief Example of SmartContainers in action
+## Brief Example of Smart Containers in action
 
 
 ## Docker
@@ -61,6 +56,9 @@ Files and directories are then created and directory is then committed as a plai
 
 The **CONTAINER ID**, a unique identifier you can use to refer to the container in other commands (this is kind of like a process id in Linux) but only persists while the container is active.
 
+### Client-Server Architecture
+Docker uses a client-server architecture so that local command line utilities can manage remote docker instances. From the [introduction](http://docs.docker.com/engine/introduction/understanding-docker/):
+> "Docker uses a client-server architecture. The Docker client talks to the Docker daemon, which does the heavy lifting of building, running, and distributing your Docker containers. Both the Docker client and the daemon can run on the same system, or you can connect a Docker client to a remote Docker daemon. The Docker client and daemon communicate via sockets or through a RESTful API."
 
 ### Existing Metadata in Docker
 Docker includes metadata attached to images and containers and may be accessed through the Docker [inspect](https://docs.docker.com/reference/commandline/inspect/) command. Docker inspect returns a JSON array.  
@@ -98,6 +96,7 @@ Metadata is set through the Docker [label](https://docs.docker.com/userguide/lab
 ```bash
 LABEL com.example.image-specs="{\"Description\":\"A containerized foobar\",\"Usage\":\"docker run --rm example\\/foobar [args]\",\"License\":\"GPL\",\"Version\":\"0.0.1-beta\",\"aBoolean\":true,\"aNumber\":0.01234,\"aNestedArray\":[\"a\",\"b\",\"c\"]}"
 ```
+
 Docker labels may also be specified as a command field in a **Dockerfile** which will be instantiated during the docker [build](https://docs.docker.com/reference/builder/) command. For example:
 ```
 LABEL com.example.label-with-value="foo"
@@ -119,18 +118,19 @@ Docker provides some brief guidelines for constructing labels taken from their d
 Smart Containers relies on this ability to attach metadata to a container or image. Since a label may be an JSON array, Smart Containers attaches a **JSON-LD** serialization of the graph object to the Docker container. All of the previous provenance history of a Docker Object (image/container) is encoded using RDF/OWL based vocabularies.
 
 ### Issues in Docker
-Most Linux distributions are not designed to run inside a Docker Container since they require some sort of init system to provide system level services. Docker generally only runs one process withing a container environment, although it has the capability to run multiple tasks. 
+* Most Linux distributions are not designed to run inside a Docker Container since they require some sort of init system to provide system level services. Docker generally only runs one process withing a container environment, although it has the capability to run multiple tasks. 
 > "When your Docker container starts, only the CMD command is run. The only processes that will be running inside the container is the CMD command, and all processes that it spawns. That's why all kinds of important system services are not run automatically – you have to run them yourself."
 
-
 The [Phusion](http://phusion.github.io/baseimage-docker/) docker base images are attempting to create a set minimal "init" environment based on Ubuntu such that services (databases, connectors, etc) may be run concurrently instead of using the Docker "link" methodology to provide the service by connecting multiple containers. 
+
+* A second issue is the inability to directly write a label without changing the state of the container or image. Because the label must be specified as part of the run command line or as part of the Dockerfile during a build operation, an additional run command must be executed to "attach" the label metadata from the previous operation. This creates a mismatch between the checksums of objects referred to in the provenance graph and the current container or image object which is always referring to the parent objects checksum, not itself.
 
 ## RDF
 The Resource Description Framework (RDF) is a framework for representing and linking data within the World Wide Web infrastructure [[RDF1.1](http://www.w3.org/TR/rdf11-concepts/)], and is a graph-based data model, where the core structure of the abstract syntax is a set of triples, each consisting of a subject, a predicate and an object. The idea is that we want relationship identifiers that form a "Knowledge Graph" and represent [things not strings](https://googleblog.blogspot.com/2012/05/introducing-knowledge-graph-things-not.html).
 
 ![Subject-Predicate-Object](./assets/rdf-graph.png)
 
-There are several serialization syntaxes for storing and exchanging RDF such as [Turtle](http://www.w3.org/TR/turtle/) and [JSON-LD](http://www.w3.org/TR/json-ld/). When creating new RDF resources, Turtle is regarded as a more human *readable* serialization although JSON-LD has the advantage of being . Servers should implement content negotiation in order to handle different serialization formats.
+There are several serialization syntaxes for storing and exchanging RDF such as [Turtle](http://www.w3.org/TR/turtle/) and [JSON-LD](http://www.w3.org/TR/json-ld/). When creating new RDF resources, Turtle is regarded as a more human *readable* serialization although JSON-LD has the advantage of being JSON compliant. Servers should implement content negotiation in order to handle different serialization formats. Additionally, the W3C has created an extension of Turtle for publication of RDF datasets called [Trig](http://www.w3.org/TR/trig/) such that there is support for representing a complete RDF Dataset that may contain multiple graphs. Because JSON-LD supports the `@Graph` construct, RDF serialized in Trig *should* be also able to be serialized in JSON-LD but may not be as "human readable".
 
 
 ## Linked Data Principles
@@ -267,7 +267,7 @@ The [OAI-ORE](https://www.openarchives.org/ore/1.0/primer) defines standards for
 }
 ```
 ### General Workflow descriptions
-Existing work exists that describe generic scientific workflow processes that can be leveraged for Smart Containers such as the [wfdesc](http://www.sciencedirect.com/science/article/pii/S1570826815000049) vocabulary that uses Prov as a foundational ontology to facilitate interoperability.
+Work exists that describe generic scientific workflow processes that can be leveraged for Smart Containers such as the [wfdesc](http://www.sciencedirect.com/science/article/pii/S1570826815000049) vocabulary that uses Prov as a foundational ontology to facilitate interoperability.
 
 
 ### Notes
@@ -275,13 +275,53 @@ Existing work exists that describe generic scientific workflow processes that ca
 2) Ontologies should be published as persistent JSON-LD contexts to facilitate extension. 
 3) Smart Containers only *Populate* core components of the vocabularies. Most Alignment should happen at the context level.
 4) An ontology pattern based approach is will facilitate reuse and interoperability.
-5) Links need to be **Dereferencable" to facilitate HATEOS, RESTFul and contextualiztion of resources. The ["Follow your nose principle"](http://patterns.dataincubator.org/book/follow-your-nose.html) is important.
+5) Links need to be **dereferencable** to facilitate HATEOS, RESTFul and contextualiztion of resources. The ["Follow your nose principle"](http://patterns.dataincubator.org/book/follow-your-nose.html) is important.
 
 ### Ontology Design Patterns created for Smart Containers
  
 
 ## Persistent Identifiers and minting URIs
 CoolURIs, Trusty URI's WebID ORCID and RDA PID group work.
+
+### Cool URIs for the Semantic Web
+RDF uses URIs to describe both web resources (documents) and concepts that represent real wold things. From the [interest group note](http://www.w3.org/TR/cooluris/)
+>"The Resource Description Framework RDF allows users to describe both Web documents and concepts from the real world—people, organisations, topics, things—in a computer-processable way. Publishing such descriptions on the Web creates the Semantic Web. URIs (Uniform Resource Identifiers) are very important, providing both the core of the framework itself and the link between RDF and the Web. This document presents guidelines for their effective use. It discusses two strategies, called 303 URIs and hash URIs. It gives pointers to several Web sites that use these solutions, and briefly discusses why several other proposals have problems."
+
+Because on the Semantic Web, URIs identify not just web documents but also real world objects, we need a consistent way of distinguishing between referencing a web document about a thing or the thing itself that is outside of the Web. One suggested solution is the use of "hash URIs" for **non-document** resources since URIs are permitted to contain fragments that are separated from the rest of the URI by the hash (#) symbol. The examples given in the technical report are illustrative:
+
+> If Example Inc. adopts this solution, then they could use these URIs to represent the company, Alice, and Bob:
+>
+> `http://www.example.com/about#exampleinc`
+> Example Inc., the company
+> `**http://www.example.com/about#bob**`
+> Bob, the person
+> `http://www.example.com/about#alice`
+> Alice, the person
+> Clients will always strip off the fragment part before requesting any of these URIs, resulting in a request to this URI:
+>
+> `http://www.example.com/about`
+> RDF document describing Example Inc., Bob, and Alice
+> At this URI, Example Inc. could serve an RDF document that contains descriptions of all three resources, using the original hash URIs to identify the resources.
+
+> Alternatively, content negotiation (see Section 2.1.) could be employed to redirect from the about URI to either a HTML or an RDF representation. The decision which to return is based on client preferences and server configuration, as explained below in Section 4.7. The Content-Location header should be set to indicate if the hash URI refers to a part of the HTML document or RDF document.
+
+### Trusty URIs
+Cool URIs assume that the resource is dereferencable which may not be true of digital artifacts that are not web resources. To account for this issue the idea if [Trusty URIs](http://trustyuri.net/) and a [publication](http://arxiv.org/abs/1401.5775) has been developed and applied with respect to [**Nanopublications**](http://arxiv.org/abs/1508.04977) which are an emerging methodology for scientific publishing that use Semantic Web methodology to link both provenance and metadata information together. An example of such a Data Set is the "Linked Drug-Drug Interactions"(LIDDI) [dataset](http://arxiv.org/abs/1507.05408). There are frameworks implementing Trusty URIs with different languages in [github](https://github.com/trustyuri). Trusty URIs identifiers contain a cryptographic hash value calculated with respect to the content of the represented digital artifact.
+
+An example of a TrustyURI `http://example.org/np1#RAHGB0WzgQijR88g_rIwtPCmzYgyO4wRMT7M91ouhojsQ`. Since Docker already generates container and image checksums that are verifyable from within Docker, instance URIs should be generated using these checksums. Since the resolver of a docker container or image id resource is **NOT** a HTTP URL, URI's that generated from docker resources should have the following syntax.
+
+```
+<urn:docker:container#(container id)>
+<urn:docker:image#(image id)>
+```
+
+This uses the same concept as a trustyURI, but identifies the correct "resolver" of a given checksum.
+
+There should be a translation feature to identify resources that are **resolvable** once the container is **running** and has a IP address and web services. Resources used in creating a docker image (github software, mounted remote file systems, etc) that are web resolvable should be identified by that URI not the `urn:docker` schema. 
+
+
+
+### Ontology Namespace. 
 
 ## Other Relevant Technologies (Linked Data Fragments and Linked Data Platform).
 
