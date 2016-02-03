@@ -1,6 +1,6 @@
 # SmartContainers Client API
 
-SmartContainers uses the Docker docker-py module [API](https://github.com/docker/docker-py/blob/master/docs/api.md) specification. This document defines how SmartContainers extends the docker-py client API for the capture of provenance information and additional methods that allow other types of metadata to be stored in the SmartContainer.
+SmartContainers uses the Docker docker-py module [API](https://github.com/docker/docker-py/blob/master/docs/api.md) specification. This document defines how SmartContainers extends the docker-py client API for the capture of provenance information and additional methods that allow other types of metadata to be stored in the SmartContainer. For full documentation of the docker-py client, see the original [API](https://github.com/docker/docker-py/blob/master/docs/api.md). Only methods extended by the SmartContainers Client API are documented here as well as some additional functions for access to data and metadata. 
 
 To instantiate a SmartContainer `Client` class that will allow you to communicate with a
 Docker daemon, simply do:
