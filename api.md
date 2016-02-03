@@ -21,21 +21,7 @@ is hosted.
 
 ****
 
-## attach
-
-The `.logs()` function is a wrapper around this method, which you can use
-instead if you want to fetch/stream container output without first retrieving
-the entire backlog.
-
-**Params**:
-
-* container (str): The container to attach to
-* stdout (bool): Get STDOUT
-* stderr (bool): Get STDERR
-* stream (bool): Return an iterator
-* logs (bool): Get all previous output
-
-**Returns** (generator or str): The logs or output for the image
+The Original API Modified by SmartContainer:
 
 ## build
 
@@ -127,52 +113,6 @@ Identical to the `docker commit` command.
 * author (str): The name of the author
 * conf (dict): The configuration for the container. See the [Docker remote api](
 https://docs.docker.com/reference/api/docker_remote_api/) for full details.
-
-## containers
-
-List containers. Identical to the `docker ps` command.
-
-**Params**:
-
-* quiet (bool): Only display numeric Ids
-* all (bool): Show all containers. Only running containers are shown by default
-* trunc (bool): Truncate output
-* latest (bool): Show only the latest created container, include non-running
-ones.
-* since (str): Show only containers created since Id or Name, include
-non-running ones
-* before (str): Show only container created before Id or Name, include
-non-running ones
-* limit (int): Show `limit` last created containers, include non-running ones
-* size (bool): Display sizes
-* filters (dict): Filters to be processed on the image list. Available filters:
-    - `exited` (int): Only containers with specified exit code
-    - `status` (str): One of `restarting`, `running`, `paused`, `exited`
-    - `label` (str): format either `"key"` or `"key=value"`
-
-**Returns** (dict): The system's containers
-
-```python
->>> from docker import Client
->>> cli = Client(base_url='tcp://127.0.0.1:2375')
->>> cli.containers()
-[{'Command': '/bin/sleep 30',
-  'Created': 1412574844,
-  'Id': '6e276c9e6e5759e12a6a9214efec6439f80b4f37618e1a6547f28a3da34db07a',
-  'Image': 'busybox:buildroot-2014.02',
-  'Names': ['/grave_mayer'],
-  'Ports': [],
-  'Status': 'Up 1 seconds'}]
-```
-
-## connect_container_to_network
-
-Connect a container to a network.
-
-**Params**:
-
-* container (str): container-id/name to be connected to the network
-* net_id (str): network id
 
 ## copy
 Identical to the `docker cp` command. Get files/folders from the container.
@@ -270,19 +210,6 @@ The utility can be used as follows:
 You can now use this with 'environment' for `create_container`.
 
 
-## create_network
-
-Create a network, similar to the `docker network create` command.
-
-**Params**:
-
-* name (str): Name of the network
-* driver (str): Name of the driver used to create the network
-
-* options (dict): Driver options as a key-value dictionary
-
-**Returns** (dict): The created network reference object
-
 ## create_volume
 
 Create and register a named volume
@@ -305,50 +232,6 @@ Create and register a named volume
 {u'Mountpoint': u'/var/lib/docker/volumes/foobar/_data', u'Driver': u'local', u'Name': u'foobar'}
 ```
 
-## diff
-
-Inspect changes on a container's filesystem.
-
-**Params**:
-
-* container (str): The container to diff
-
-**Returns** (str):
-
-## disconnect_container_from_network
-
-**Params**:
-
-* container (str): container-id/name to be disconnected from a network
-* net_id (str): network id
-
-## events
-
-Identical to the `docker events` command: get real time events from the server. The `events`
-function return a blocking generator you can iterate over to retrieve events as they happen.
-
-**Params**:
-
-* since (UTC datetime or int): get events from this point
-* until (UTC datetime or int): get events until this point
-* filters (dict): filter the events by event time, container or image
-* decode (bool): If set to true, stream will be decoded into dicts on the
-  fly. False by default.
-
-**Returns** (generator):
-
-```python
-{u'status': u'start',
- u'from': u'image/with:tag',
- u'id': u'container-id',
- u'time': 1423339459}
-```
-
-## execute
-
-This command is deprecated for docker-py >= 1.2.0 ; use `exec_create` and
-`exec_start` instead.
-
 ## exec_create
 
 Sets up an exec instance in a running container.
@@ -365,27 +248,6 @@ Sets up an exec instance in a running container.
 
 **Returns** (dict): A dictionary with an exec 'Id' key.
 
-
-## exec_inspect
-
-Return low-level information about an exec command.
-
-**Params**:
-
-* exec_id (str): ID of the exec instance
-
-**Returns** (dict): Dictionary of values returned by the endpoint.
-
-
-## exec_resize
-
-Resize the tty session used by the specified exec command.
-
-**Params**:
-
-* exec_id (str): ID of the exec instance
-* height (int): Height of tty session
-* width (int): Width of tty session
 
 ## exec_start
 
@@ -452,42 +314,6 @@ An example of how to get (save) an image to a file.
 >>> image_tar.close()
 ```
 
-## history
-
-Show the history of an image.
-
-**Params**:
-
-* image (str): The image to show history for
-
-**Returns** (str): The history of the image
-
-## images
-
-List images. Identical to the `docker images` command.
-
-**Params**:
-
-* name (str): Only show images belonging to the repository `name`
-* quiet (bool): Only show numeric Ids. Returns a list
-* all (bool): Show all images (by default filter out the intermediate image
-layers)
-* filters (dict): Filters to be processed on the image list. Available filters:
-    - `dangling` (bool)
-    - `label` (str): format either `"key"` or `"key=value"`
-
-**Returns** (dict or list): A list if `quiet=True`, otherwise a dict.
-
-```python
-[{'Created': 1401926735,
-'Id': 'a9eb172552348a9a49180694790b33a1097f546456d041b6e82e4d7716ddb721',
-'ParentId': '120e218dd395ec314e7b6249f39d2853911b3d6def6ea164ae05722649f34b16',
-'RepoTags': ['busybox:buildroot-2014.02', 'busybox:latest'],
-'Size': 0,
-'VirtualSize': 2433303},
-...
-```
-
 ## import_image
 
 Similar to the `docker import` command.
@@ -550,86 +376,6 @@ like the `FROM` Dockerfile parameter.
 * repository (str): The repository to create
 * tag (str): The tag to apply
 
-## info
-
-Display system-wide information. Identical to the `docker info` command.
-
-**Returns** (dict): The info as a dict
-
-```
->>> from docker import Client
->>> cli = Client(base_url='tcp://127.0.0.1:2375')
->>> cli.info()
-{'Containers': 3,
- 'Debug': 1,
- 'Driver': 'aufs',
- 'DriverStatus': [['Root Dir', '/mnt/sda1/var/lib/docker/aufs'],
-  ['Dirs', '225']],
- 'ExecutionDriver': 'native-0.2',
- 'IPv4Forwarding': 1,
- 'Images': 219,
- 'IndexServerAddress': 'https://index.docker.io/v1/',
- 'InitPath': '/usr/local/bin/docker',
- 'InitSha1': '',
- 'KernelVersion': '3.16.1-tinycore64',
- 'MemoryLimit': 1,
- 'NEventsListener': 0,
- 'NFd': 11,
- 'NGoroutines': 12,
- 'OperatingSystem': 'Boot2Docker 1.2.0 (TCL 5.3);',
- 'SwapLimit': 1}
-```
-
-## insert
-*DEPRECATED*
-
-## inspect_container
-
-Identical to the `docker inspect` command, but only for containers.
-
-**Params**:
-
-* container (str): The container to inspect
-
-**Returns** (dict): Nearly the same output as `docker inspect`, just as a
-single dict
-
-## inspect_image
-
-Identical to the `docker inspect` command, but only for images.
-
-**Params**:
-
-* image_id (str): The image to inspect
-
-**Returns** (dict): Nearly the same output as `docker inspect`, just as a
-single dict
-
-## inspect_network
-
-Retrieve network info by id.
-
-**Params**:
-
-* net_id (str): network id
-
-**Returns** (dict): Network information dictionary
-
-## inspect_volume
-
-Retrieve volume info by name.
-
-**Params**:
-
-* name (str): volume name
-
-**Returns** (dict): Volume information dictionary
-
-```python
->>> cli.inspect_volume('foobar')
-{u'Mountpoint': u'/var/lib/docker/volumes/foobar/_data', u'Driver': u'local', u'Name': u'foobar'}
-```
-
 ## kill
 
 Kill a container or send a signal to a container.
@@ -663,73 +409,6 @@ Nearly identical to the `docker login` command, but non-interactive.
   (default `$HOME/.dockercfg`)
 
 **Returns** (dict): The response from the login request
-
-## logs
-
-Identical to the `docker logs` command. The `stream` parameter makes the `logs`
-function return a blocking generator you can iterate over to retrieve log
-output as it happens.
-
-**Params**:
-
-* container (str): The container to get logs from
-* stdout (bool): Get STDOUT
-* stderr (bool): Get STDERR
-* stream (bool): Stream the response
-* timestamps (bool): Show timestamps
-* tail (str or int): Output specified number of lines at the end of logs: `"all"` or `number`. Default `"all"`
-* since (datetime or int): Show logs since a given datetime or integer epoch (in seconds)
-
-**Returns** (generator or str):
-
-## networks
-
-List networks currently registered by the docker daemon. Similar to the `docker networks ls` command.
-
-**Params**
-
-* names (list): List of names to filter by
-* ids (list): List of ids to filter by
-
-The above are combined to create a filters dict.
-
-**Returns** (dict): List of network objects.
-
-## pause
-
-Pauses all processes within a container.
-
-**Params**:
-
-* container (str): The container to pause
-
-
-## ping
-
-Hits the `/_ping` endpoint of the remote API and returns the result. An
-exception will be raised if the endpoint isn't responding.
-
-**Returns** (bool)
-
-## port
-Lookup the public-facing port that is NAT-ed to `private_port`. Identical to
-the `docker port` command.
-
-**Params**:
-
-* container (str): The container to look up
-* private_port (int): The private port to inspect
-
-**Returns** (list of dict): The mapping for the host ports
-
-```bash
-$ docker run -d -p 80:80 ubuntu:14.04 /bin/sleep 30
-7174d6347063a83f412fad6124c99cffd25ffe1a0807eb4b7f9cec76ac8cb43b
-```
-```python
->>> cli.port('7174d6347063', 80)
-[{'HostIp': '0.0.0.0', 'HostPort': '80'}]
-```
 
 ## pull
 
@@ -827,16 +506,6 @@ Remove an image. Similar to the `docker rmi` command.
 * force (bool): Force removal of the image
 * noprune (bool): Do not delete untagged parents
 
-## remove_network
-
-Remove a network. Similar to the `docker network rm` command.
-
-**Params**:
-
-* net_id (str): The network's id
-
-Failure to remove will raise a `docker.errors.APIError` exception.
-
 ## remove_volume
 
 Remove a volume. Similar to the `docker volume rm` command.
@@ -855,16 +524,6 @@ Rename a container. Similar to the `docker rename` command.
 
 * container (str): ID of the container to rename
 * name (str): New name for the container
-
-## resize
-
-Resize the tty session.
-
-**Params**:
-
-* container (str or dict): The container to resize
-* height (int): Height of tty session
-* width (int): Width of tty session
 
 ## restart
 
@@ -929,31 +588,6 @@ Similar to the `docker start` command, but doesn't support attach options. Use
 None
 ```
 
-## stats
-
-The Docker API parallel to the `docker stats` command.
-This will stream statistics for a specific container.
-
-**Params**:
-
-* container (str): The container to stream statistics for
-* decode (bool): If set to true, stream will be decoded into dicts on the
-  fly. False by default.
-* stream (bool): If set to false, only the current stats will be returned
-  instead of a stream. True by default.
-
-```python
->>> from docker import Client
->>> cli = Client(base_url='tcp://127.0.0.1:2375')
->>> stats_obj = cli.stats('elasticsearch')
->>> for stat in stats_obj:
->>>     print(stat)
-{"read":"2015-02-11T21:47:30.49388286+02:00","network":{"rx_bytes":666052,"rx_packets":4409 ...
-...
-...
-...
-```
-
 ## stop
 
 Stops a container. Similar to the `docker stop` command.
@@ -977,35 +611,15 @@ Tag an image into a repository. Identical to the `docker tag` command.
 
 **Returns** (bool): True if successful
 
-## top
-Display the running processes of a container.
+****
+## New API functions defined by SmartContainers.
 
-**Params**:
+## get_label
 
-* container (str): The container to inspect
-* ps_args (str): An optional arguments passed to ps (e.g., aux)
+## get_entry
 
-**Returns** (str): The output of the top
 
-```python
->>> from docker import Client
->>> cli = Client(base_url='tcp://127.0.0.1:2375')
->>> cli.create_container('busybox:latest', '/bin/sleep 30', name='sleeper')
->>> cli.start('sleeper')
->>> cli.top('sleeper')
-{'Processes': [['952', 'root', '/bin/sleep 30']],
- 'Titles': ['PID', 'USER', 'COMMAND']}
-```
-
-## unpause
-
-Unpauses all processes within a container.
-
-**Params**:
-
-* container (str): The container to unpause
-
-## version
+## sc_version
 
 Nearly identical to the `docker version` command.
 
@@ -1026,45 +640,3 @@ Nearly identical to the `docker version` command.
 }
 ```
 
-## volumes
-
-List volumes currently registered by the docker daemon. Similar to the `docker volume ls` command.
-
-**Params**
-
-* filters (dict): Server-side list filtering options.
-
-**Returns** (dict): Dictionary with list of volume objects as value of the `Volumes` key.
-
-```python
->>> cli.volumes()
-{u'Volumes': [
-  {u'Mountpoint': u'/var/lib/docker/volumes/foobar/_data', u'Driver': u'local', u'Name': u'foobar'},
-  {u'Mountpoint': u'/var/lib/docker/volumes/baz/_data', u'Driver': u'local', u'Name': u'baz'}
-]}
-```
-
-## wait
-Identical to the `docker wait` command. Block until a container stops, then
-return its exit code. Returns the value `-1` if the API responds without a
-`StatusCode` attribute.
-
-If `container` is a dict, the `Id` key is used.
-
-If the timeout value is exceeded, a `requests.exceptions.ReadTimeout`
-exception will be raised.
-
-**Params**:
-
-* container (str or dict): The container to wait on
-* timeout (int): Request timeout
-
-**Returns** (int): The exit code of the container
-
-
-<!---
-TODO:
-
-* load_image
-
--->
