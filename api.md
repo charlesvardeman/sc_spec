@@ -614,10 +614,10 @@ Tag an image into a repository. Identical to the `docker tag` command.
 ****
 ## New API functions defined by SmartContainers.
 
-## get_label
-
 ## get_entry
 
+
+Returns http or directory entry point inside container as a json-ld document using the hydra core vocabulary.
 
 ## sc_version
 
@@ -640,3 +640,11 @@ Nearly identical to the `docker version` command.
 }
 ```
 
+## get_label
+Get json_ld string as a docker label to an docker image.
+
+## put_label
+Put json_ld string to a docker conta
+
+## create_sc
+Infect container with SmartContainer API and Linked Data Platform. In short, make a "Smart Container"
