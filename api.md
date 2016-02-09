@@ -648,3 +648,9 @@ Put json_ld string to a docker conta
 
 ## create_sc
 Infect container with SmartContainer API and Linked Data Platform. In short, make a "Smart Container"
+
+## put_config
+Send configuration file to SmartContainers for use in a operation. Normally, the configuration is stored in the .sc directory, but for cloud operations the file needs to be provided. The Configuration stores persistent data such as ORCID id, Prov:Agent information.
+
+## get_config
+Retrieve current configuration file.

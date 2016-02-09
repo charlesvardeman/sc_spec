@@ -21,6 +21,8 @@ Checksum completeness of the reproduced experiment.
 
 
 
-For 2. I suggest that we make some rules of write dockerfile. Besides normal dockerfile instructions, there should be a part with provisioning requirements like what vagrant/puppet used to provision environment.
+For 2. I suggest that we make some rules for writing a dockerfile. Besides normal dockerfile instructions, there should be a part with provisioning requirements like what vagrant/puppet used to provision environment.
 Author should separate computational activities from provisioning activities.
+
+Use of [WebID](https://www.w3.org/wiki/WebID) for W3C identification methodology.
 
